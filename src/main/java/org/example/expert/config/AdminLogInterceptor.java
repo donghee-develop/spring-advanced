@@ -33,8 +33,8 @@ public class AdminLogInterceptor implements HandlerInterceptor {
         Date currentDate = new Date();
         currentDate.setTime(System.currentTimeMillis());
         String uri = request.getRequestURI();
-        log.info("현재 시간 : " + currentDate);
-        log.info("URI : " + uri);
+        log.info("현재 시간 : {}", currentDate);
+        log.info("URI : {}", uri);
 
         return true;
     }
