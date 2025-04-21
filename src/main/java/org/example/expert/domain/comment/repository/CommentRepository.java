@@ -12,5 +12,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @EntityGraph(attributePaths = {"user"})
-    List<Comment> findByTodoIdWithUser(@Param("todoId") Long todoId);
+    List<Comment> findByTodoId(Long todoId);
 }
