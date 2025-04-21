@@ -1,6 +1,8 @@
 package org.example.expert.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.expert.config.CustomException;
+import org.example.expert.config.ErrorCode;
 import org.example.expert.config.JwtUtil;
 import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.auth.dto.request.SigninRequest;
@@ -48,7 +50,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
-                () -> new InvalidRequestException("가입되지 않은 유저입니다."));
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {

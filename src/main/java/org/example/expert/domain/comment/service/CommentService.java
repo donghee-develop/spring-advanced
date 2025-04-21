@@ -1,6 +1,8 @@
 package org.example.expert.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.expert.config.CustomException;
+import org.example.expert.config.ErrorCode;
 import org.example.expert.domain.comment.dto.request.CommentSaveRequest;
 import org.example.expert.domain.comment.dto.response.CommentResponse;
 import org.example.expert.domain.comment.dto.response.CommentSaveResponse;
@@ -28,8 +30,8 @@ public class CommentService {
     @Transactional
     public CommentSaveResponse saveComment(AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest) {
         User user = User.fromAuthUser(authUser);
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
-                new InvalidRequestException("Todo not found"));
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new CustomException(ErrorCode.TODO_NOT_FOUND));
 
         Comment newComment = Comment.builder()
                 .contents(commentSaveRequest.getContents())

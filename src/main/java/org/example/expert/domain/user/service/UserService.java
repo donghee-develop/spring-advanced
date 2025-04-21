@@ -1,6 +1,8 @@
 package org.example.expert.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.expert.config.CustomException;
+import org.example.expert.config.ErrorCode;
 import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
@@ -19,7 +21,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse getUser(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new InvalidRequestException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         return new UserResponse(user.getId(), user.getEmail());
     }
 
@@ -27,17 +30,17 @@ public class UserService {
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new InvalidRequestException("User not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         String newPassword = userChangePasswordRequest.getNewPassword();
         String oldPassword = userChangePasswordRequest.getOldPassword();
 
         boolean samePassword = passwordEncoder.matches(oldPassword, newPassword);
         if (samePassword) {
-            throw new InvalidRequestException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
+            throw new CustomException(ErrorCode.SAME_AS_OLD_PASSWORD);
         }
         boolean correctPassword = passwordEncoder.matches(oldPassword, user.getPassword());
         if (!correctPassword) {
-            throw new InvalidRequestException("잘못된 비밀번호입니다.");
+            throw new CustomException(ErrorCode.INVALID_CURRENT_PASSWORD);
         }
 
         user.changePassword(passwordEncoder.encode(newPassword));
