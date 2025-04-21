@@ -1,0 +1,8 @@
+1. 문제
+deleteManager 유저와 투두를 생성자를 통해 만들고 있다.
+
+2. 해결
+Todo todo = manager.getTodo();
+User user = todo.getUser();
+다음과 같이 작성하여 불필요한 생성자를 줄이고 코드 가독성을 높였다.
+return 스트림 작성 및 from 메소드 사용하여 가독성을 높였다.

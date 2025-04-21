@@ -1,0 +1,34 @@
+// 수정 전
+if (passwordEncoder.matches(userChangePasswordRequest.getNewPassword(), user.getPassword())) {
+    throw new InvalidRequestException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
+}
+
+if (!passwordEncoder.matches(userChangePasswordRequest.getOldPassword(), user.getPassword())) {
+    throw new InvalidRequestException("잘못된 비밀번호입니다.");
+}
+
+// 수정 후
+
+String newPassword = userChangePasswordRequest.getNewPassword();
+String oldPassword = userChangePasswordRequest.getOldPassword();
+
+boolean samePassword = passwordEncoder.matches(oldPassword, newPassword);
+if (samePassword) {
+throw new InvalidRequestException("새 비밀번호는 기존 비밀번호와 같을 수 없습니다.");
+}
+boolean correctPassword = passwordEncoder.matches(oldPassword, user.getPassword();
+if (!correctPassword) {
+throw new InvalidRequestException("잘못된 비밀번호입니다.");
+}
+
+user.changePassword(passwordEncoder.encode(newPassword));
+userRepository.save(user);
+
+1. 문제
+변수를 사용하지 않아 조건문이 길고 호출 수가 많다.
+
+2. 해결
+변수를 생성하여 리펙터링을 하였다.
+
+3. 해결 완료
+마지막으로 레파지터리에 save를 명시하였다.
